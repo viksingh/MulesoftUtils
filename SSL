@@ -2,5 +2,6 @@
   -M-Djavax.net.ssl.trustStore=C:\jdk8_64\jre\lib\security\cacerts_old
   -M-Djavax.net.ssl.trustStorePassword=changeit
   
+  -Dmule.verbose.exceptions=true
   
   # Add custom key store for testing application
