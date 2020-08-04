@@ -1,0 +1,9 @@
+Upsert accepts an array - so put the mapped output as an array before calling the connector.
+
+---
+[ {
+	LastName: payload.last_name,
+	FirstName: payload.first_name,
+	Phone: payload.Phone,
+	Email: payload.email
+}]
