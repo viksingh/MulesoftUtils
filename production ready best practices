@@ -1,0 +1,261 @@
+file:///C:/Objects/Mule%20Training/Production%20Ready%20best%20practices/APDevPRDev4.3_studentManual_31jul2020.pdf
+
+- added maven and Java to path
+
+New account created :
+vikas_singh_Oct2020
+******2@
+
+
+change maven to anypoint studio
+
+changed XML settings
+
+
+https://anypoint.mulesoft.com/exchange/portals/anyairline/a63e6d25-8aaf-4512-b36d-d91b90a55c4a/simplified-check-in-papi/minor/1.0/console/summary/
+
+
+
+line 8 of API spec:
+
+"host": "vs20201021-check-in-papi.us-e2.cloudhub.io",
+
+
+
+
+impl URL;
+
+https://vs20201021-check-in-papi.us-e2.cloudhub.io/api/v1
+
+
+generate a cert
+
+
+
+keytool -v -genkeypair -keyalg RSA -dname "cn=localhost, ou=Training, o=MuleSoft, c=US" -ext SAN="DNS:localhost,IP:127.0.0.1" -validity 365 -alias server -keystore "check-in-papi.p12" -storetype pkcs12 -storepass "mule12345"
+
+
+API auto discovery ( prod )
+16431532
+
+org auth :
+
+
+client id:
+a5c6e95818294c8ca26f40a139350566
+
+client secret:
+E8503F794c1D426Eb171025B21Cfa9D7
+
+-M-Danypoint.platform.client_id=a5c6e95818294c8ca26f40a139350566
+-M-Danypoint.platform.client_secret=E8503F794c1D426Eb171025B21Cfa9D7
+-M-Djavax.net.ssl.trustStore=C:\jdk8_64\jre\lib\security\cacerts_old
+-M-Djavax.net.ssl.trustStorePassword=changeit
+
+move the name space up and xsd
+
+
+xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+
+
+
+
+
+
+resource::1cbe2687-631e-4f2a-861f-b19552dd3aea:check-in-papi:1.0.0:oas:zip:api.json
+
+
+api: group id / artifcat id / version
+
+api:
+	groupId:
+	artifactId:
+	version:
+	spec:
+	majorVersion:
+	port:
+	id:
+
+
+${api.port}
+
+
+
+
+
+https://vs20201021-check-in-papi.us-e2.cloudhub.io/api/v1
+
+
+mvn -DmuleDeploy deploy -Dap.client_id=a5c6e95818294c8ca26f40a139350566 -Dap.client_secret=E8503F794c1D426Eb171025B21Cfa9D7
+
+
+test API autodiscovery ID: 
+16433777
+
+dev autodiscovery id:
+16433789
+
+
+mvn -DmuleDeploy deploy -Dap.client_id=a5c6e95818294c8ca26f40a139350566 -Dap.client_secret=E8503F794c1D426Eb171025B21Cfa9D7 -Dencrypt.key=secure12345 -Ddeployment.env=dev
+
+mvn -DmuleDeploy deploy -Dap.client_id=a5c6e95818294c8ca26f40a139350566 -Dap.client_secret=E8503F794c1D426Eb171025B21Cfa9D7 -Dencrypt.key=secure12345 -Ddeployment.env=test
+
+mvn -DmuleDeploy deploy -Dap.client_id=a5c6e95818294c8ca26f40a139350566 -Dap.client_secret=E8503F794c1D426Eb171025B21Cfa9D7 -Dencrypt.key=secure12345 -Ddeployment.env=prod -Ddeployment.suffix="" 
+
+
+
+
+<dependency>
+  <groupId>cc568b69-a181-4d4c-b044-90054c52897b</groupId>
+  <artifactId>json-logger</artifactId>
+  <version>2.0.1</version>
+  <classifier>mule-plugin</classifier>
+</dependency
+
+
+
+org.mule.munit.runner.model.TestExecutionException: Error [MULE:EXPRESSION] while running test 'main-test-suite-check-in-by-pnrTest':"You called the function 'Value Selector' with these arguments: 
+  1: String ("uriParams.PNR=\"N123\"" as String {encoding: "UTF-8", mediaType: "*/*", mime...)
+  2: Name ("uriParams")
+
+But it expects one of these combinations:
+  (Array, Name)
+  (Array, String)
+  (Date, Name)
+  (DateTime, Name)
+  (LocalDateTime, Name)
+  (LocalTime, Name)
+  (Object, Name)
+  (Object, String)
+  (Period, Name)
+  (Time, Name)
+
+1| attributes.uriParams.'PNR'
+   ^^^^^^^^^^^^^^^^^^^^
+Trace:
+  at main (line: 1, column: 1)" evaluating expression: "attributes.uriParams.'PNR'".
+	at org.mule.munit.runner.flow.TestFlow.run(TestFlow.java:302)
+	at org.mule.munit.runner.model.Test.run(Test.java:94)
+	at org.mule.munit.runner.model.Suite.run(Suite.java:112)
+	at org.mule.munit.runner.SuiteRunner.doRun(SuiteRunner.java:61)
+	at org.mule.munit.runner.SuiteRunner.run(SuiteRunner.java:46)
+	at org.mule.munit.runner.remote.api.server.RunMessageHandler.runSuite(RunMessageHandler.java:99)
+	at org.mule.munit.runner.remote.api.server.RunMessageHandler.parseAndRun(RunMessageHandler.java:82)
+	at org.mule.munit.runner.remote.api.server.RunMessageHandler.handle(RunMessageHandler.java:75)
+	at org.mule.munit.runner.remote.api.server.RunnerServer.handleClientMessage(RunnerServer.java:145)
+	at org.mule.munit.runner.remote.api.server.RunnerServer.run(RunnerServer.java:91)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.mule.service.scheduler.internal.AbstractRunnableFutureDecorator.doRun(AbstractRunnableFutureDecorator.java:111)
+	at org.mule.service.scheduler.internal.RunnableFutureDecorator.run(RunnableFutureDecorator.java:54)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.util.concurrent.ExecutionException: org.mule.runtime.api.component.execution.ComponentExecutionException: org.mule.runtime.core.api.expression.ExpressionRuntimeException: "You called the function 'Value Selector' with these arguments: 
+  1: String ("uriParams.PNR=\"N123\"" as String {encoding: "UTF-8", mediaType: "*/*", mime...)
+  2: Name ("uriParams")
+
+But it expects one of these combinations:
+  (Array, Name)
+  (Array, String)
+  (Date, Name)
+  (DateTime, Name)
+  (LocalDateTime, Name)
+  (LocalTime, Name)
+  (Object, Name)
+  (Object, String)
+  (Period, Name)
+  (Time, Name)
+
+1| attributes.uriParams.'PNR'
+   ^^^^^^^^^^^^^^^^^^^^
+Trace:
+  at main (line: 1, column: 1)" evaluating expression: "attributes.uriParams.'PNR'".
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)
+	at org.mule.munit.runner.flow.TestFlow$ExceptionAwareCallable.call(TestFlow.java:366)
+	at org.mule.munit.runner.flow.TestFlow$ExceptionAwareCallable.call(TestFlow.java:355)
+	... 6 more
+Caused by: org.mule.runtime.api.component.execution.ComponentExecutionException: org.mule.runtime.core.api.expression.ExpressionRuntimeException: "You called the function 'Value Selector' with these arguments: 
+  1: String ("uriParams.PNR=\"N123\"" as String {encoding: "UTF-8", mediaType: "*/*", mime...)
+  2: Name ("uriParams")
+
+But it expects one of these combinations:
+  (Array, Name)
+  (Array, String)
+  (Date, Name)
+  (DateTime, Name)
+  (LocalDateTime, Name)
+  (LocalTime, Name)
+  (Object, Name)
+  (Object, String)
+  (Period, Name)
+  (Time, Name)
+
+1| attributes.uriParams.'PNR'
+   ^^^^^^^^^^^^^^^^^^^^
+Trace:
+  at main (line: 1, column: 1)" evaluating expression: "attributes.uriParams.'PNR'".
+Caused by: org.mule.runtime.core.api.expression.ExpressionRuntimeException: "You called the function 'Value Selector' with these arguments: 
+  1: String ("uriParams.PNR=\"N123\"" as String {encoding: "UTF-8", mediaType: "*/*", mime...)
+  2: Name ("uriParams")
+
+But it expects one of these combinations:
+  (Array, Name)
+  (Array, String)
+  (Date, Name)
+  (DateTime, Name)
+  (LocalDateTime, Name)
+  (LocalTime, Name)
+  (Object, Name)
+  (Object, String)
+  (Period, Name)
+  (Time, Name)
+
+1| attributes.uriParams.'PNR'
+   ^^^^^^^^^^^^^^^^^^^^
+Trace:
+  at main (line: 1, column: 1)" evaluating expression: "attributes.uriParams.'PNR'".
+Caused by: org.mule.weave.v2.exception.UnexpectedFunctionCallTypesException: You called the function 'Value Selector' with these arguments: 
+  1: String ("uriParams.PNR=\"N123\"" as String {encoding: "UTF-8", mediaType: "*/*", mime...)
+  2: Name ("uriParams")
+
+But it expects one of these combinations:
+  (Array, Name)
+  (Array, String)
+  (Date, Name)
+  (DateTime, Name)
+  (LocalDateTime, Name)
+  (LocalTime, Name)
+  (Object, Name)
+  (Object, String)
+  (Period, Name)
+  (Time, Name)
+
+1| attributes.uriParams.'PNR'
+   ^^^^^^^^^^^^^^^^^^^^
+Trace:
+  at main (line: 1, column: 1)
+
+
+
+
+
+
+
+<munit-tools:with-attribute whereValue="create-payment-for-bags" attributeName="name" />
+<munit-tools:with-attribute whereValue="check-in-flights-management" attributeName="name" />
+<munit-tools:with-attribute whereValue="register-passenger-data" attributeName="name" />
+
+
+
+#[
+output application/json
+---
+read(MunitTools::getResourceAsString('json/check-in-by-pnr-request.json'),'application/json')]
+]
+
+
+
+
+TestData
